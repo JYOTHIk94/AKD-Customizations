@@ -20,7 +20,7 @@ The importer:
   1. Processes group rows first, then leaves (topological sort by depth).
   2. Refuses to overwrite the 3 scaffold accounts (VAT Output, VAT Input,
      Exchange Gain/Loss) — those carry BRD-mandated names and are referenced
-     by accounting/setup.py.
+     by accounting/bootstrap.py.
   3. Idempotent — re-running the same CSV is a no-op.
 
 Usage:
@@ -37,7 +37,7 @@ import frappe
 COMPANY = "AKD Consulting LLC"
 ABBR = "AKD"
 
-# Accounts whose names are referenced by other helpers (accounting/setup.py
+# Accounts whose names are referenced by other helpers (accounting/bootstrap.py
 # tax templates, Mode of Payment wiring, FX gain/loss config). The importer
 # must not rename or merge these — if the Odoo CSV claims them, skip and warn.
 PROTECTED_ACCOUNTS = {

@@ -7,8 +7,8 @@ Run after:
   3. VAT Input / VAT Output / Cash / Bank accounts exist in CoA
 
 Usage:
-  bench --site dhh.com execute \\
-    akd_customizations.accounting.setup.setup_akd_company \\
+  bench --site akd.com execute \\
+    akd_customizations.accounting.bootstrap.setup_akd_company \\
     --kwargs "{'company': 'AKD Consulting LLC'}"
 
 BRD references: FR-ACC-12, 23, 24, 26, 27, 46, 50.

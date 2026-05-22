@@ -9,14 +9,14 @@ Two phases:
     scaffold_accounts  — VAT Output/Input, Exchange Gain/Loss
     exchange_rate      — Currency Exchange Settings provider + Company FX accts
     role_profiles      — 3 AKD Role Profiles
-    (full=True)        — accounting.setup_akd_company: cost centres + tax
+    (full=True)        — accounting.bootstrap.setup_akd_company: cost centres + tax
                          templates + MoP wiring. Requires CoA to expose
                          VAT Output / VAT Input / RAK Bank accounts.
 
   run_module_2() — drives the Module 2 close-out steps that need AKD input:
     coa_import         — only if odoo_csv_path is given
     vat_consolidation  — only if vat_action is given ("freeze" | "rename")
-    accounting_setup   — runs accounting.setup_akd_company
+    accounting_setup   — runs accounting.bootstrap.setup_akd_company
 
 All steps are idempotent.
 """
@@ -42,7 +42,7 @@ from akd_customizations.setup import (
 	vat_consolidation,
 	wht,
 )
-from akd_customizations.accounting import setup as accounting_setup
+from akd_customizations.accounting import bootstrap as accounting_setup
 from akd_customizations.utils import coa_mapper
 
 

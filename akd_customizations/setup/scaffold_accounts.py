@@ -1,6 +1,6 @@
 """
 Scaffold accounts the BRD names explicitly, so the tax-template and exchange
-helpers in accounting/setup.py can find them on the Standard CoA.
+helpers in accounting/bootstrap.py can find them on the Standard CoA.
 
 BRD references:
   FR-ACC-22  — separate Exchange Gain/Loss account
@@ -10,7 +10,7 @@ BRD references:
 Notes:
   • These accounts must survive the Odoo CoA import, OR the Odoo mapping
     (utils/coa_mapper.py) must rename equivalents to the same names. If
-    Odoo CoA replaces them by name, accounting/setup.py templates will
+    Odoo CoA replaces them by name, accounting/bootstrap.py templates will
     point at orphan accounts — re-run after import to refresh.
 """
 

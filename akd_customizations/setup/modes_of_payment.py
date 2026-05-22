@@ -6,7 +6,7 @@ BRD references:
   FR-ACC-49, 50 — RAK Bank Current AED is the company default bank
 
 Bank Transfer and Cheque post against the RAK Bank AED current account.
-Separate from accounting/setup.py because it doesn't depend on cost centres
+Separate from accounting/bootstrap.py because it doesn't depend on cost centres
 or VAT templates and can run before the Odoo CoA import.
 """
 
