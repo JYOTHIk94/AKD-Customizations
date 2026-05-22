@@ -1,0 +1,62 @@
+[
+ {
+  "doctype": "Payment Term",
+  "name": "AKD-Net-30",
+  "payment_term_name": "AKD-Net-30",
+  "description": "Net 30 days from invoice date.",
+  "invoice_portion": 100.0,
+  "due_date_based_on": "Day(s) after invoice date",
+  "credit_days": 30,
+  "credit_months": 0
+ },
+ {
+  "doctype": "Payment Term",
+  "name": "AKD-Net-45",
+  "payment_term_name": "AKD-Net-45",
+  "description": "Net 45 days from invoice date.",
+  "invoice_portion": 100.0,
+  "due_date_based_on": "Day(s) after invoice date",
+  "credit_days": 45,
+  "credit_months": 0
+ },
+ {
+  "doctype": "Payment Term",
+  "name": "AKD-Net-60",
+  "payment_term_name": "AKD-Net-60",
+  "description": "Net 60 days from invoice date.",
+  "invoice_portion": 100.0,
+  "due_date_based_on": "Day(s) after invoice date",
+  "credit_days": 60,
+  "credit_months": 0
+ },
+ {
+  "doctype": "Payment Term",
+  "name": "AKD-PIA",
+  "payment_term_name": "AKD-PIA",
+  "description": "Payment In Advance — supplier term.",
+  "invoice_portion": 100.0,
+  "due_date_based_on": "Day(s) after invoice date",
+  "credit_days": 0,
+  "credit_months": 0
+ },
+ {
+  "doctype": "Payment Term",
+  "name": "AKD-Advance-50",
+  "payment_term_name": "AKD-Advance-50",
+  "description": "50% advance on order confirmation.",
+  "invoice_portion": 50.0,
+  "due_date_based_on": "Day(s) after invoice date",
+  "credit_days": 0,
+  "credit_months": 0
+ },
+ {
+  "doctype": "Payment Term",
+  "name": "AKD-Delivery-50",
+  "payment_term_name": "AKD-Delivery-50",
+  "description": "50% on delivery — pair with AKD-Advance-50.",
+  "invoice_portion": 50.0,
+  "due_date_based_on": "Day(s) after invoice date",
+  "credit_days": 30,
+  "credit_months": 0
+ }
+]

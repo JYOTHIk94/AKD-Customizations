@@ -1,0 +1,273 @@
+[
+ {
+  "doctype": "Notification",
+  "name": "AKD Sales Invoice Submitted",
+  "subject": "Invoice {{ doc.name }} from AKD Consulting LLC",
+  "document_type": "Sales Invoice",
+  "event": "Submit",
+  "enabled": 1,
+  "channel": "Email",
+  "send_to_all_assignees": 0,
+  "is_standard": 0,
+  "recipients": [
+   {
+    "doctype": "Notification Recipient",
+    "receiver_by_document_field": "contact_email"
+   }
+  ],
+  "message": "Dear {{ doc.customer_name }},\n\nPlease find attached invoice {{ doc.name }} dated {{ doc.posting_date }} for {{ doc.currency }} {{ frappe.utils.fmt_money(doc.grand_total, currency=doc.currency) }}.\n\nPayment Terms: {{ doc.payment_terms_template or '' }}\nDue Date: {{ doc.due_date }}\n\nBank Details: see attached.\n\nThank you for your business.\nAKD Consulting LLC",
+  "attach_print": 1,
+  "print_format": "AKD Sales Invoice"
+ },
+ {
+  "doctype": "Notification",
+  "name": "AKD Payment Entry Received",
+  "subject": "Payment Received — {{ doc.name }}",
+  "document_type": "Payment Entry",
+  "event": "Submit",
+  "enabled": 1,
+  "channel": "Email",
+  "is_standard": 0,
+  "condition": "doc.payment_type == 'Receive'",
+  "recipients": [
+   {
+    "doctype": "Notification Recipient",
+    "receiver_by_document_field": "contact_email"
+   }
+  ],
+  "message": "Dear {{ doc.party_name }},\n\nWe acknowledge receipt of {{ doc.paid_from_account_currency }} {{ frappe.utils.fmt_money(doc.paid_amount, currency=doc.paid_from_account_currency) }} on {{ doc.posting_date }}.\n\nReference: {{ doc.reference_no or doc.name }}\n\nThank you.\nAKD Consulting LLC"
+ },
+ {
+  "doctype": "Notification",
+  "name": "AKD Sales Invoice Overdue",
+  "subject": "Overdue: Invoice {{ doc.name }}",
+  "document_type": "Sales Invoice",
+  "event": "Days After",
+  "date_changed": "due_date",
+  "days_in_advance": 7,
+  "enabled": 1,
+  "channel": "Email",
+  "is_standard": 0,
+  "condition": "doc.outstanding_amount > 0 and doc.docstatus == 1",
+  "recipients": [
+   {
+    "doctype": "Notification Recipient",
+    "receiver_by_document_field": "contact_email",
+    "cc": "finance@akd-consulting.ae"
+   }
+  ],
+  "message": "Dear {{ doc.customer_name }},\n\nInvoice {{ doc.name }} dated {{ doc.posting_date }} for {{ doc.currency }} {{ frappe.utils.fmt_money(doc.outstanding_amount, currency=doc.currency) }} was due on {{ doc.due_date }} and remains unpaid.\n\nPlease arrange payment at the earliest.\n\nAKD Consulting LLC"
+ },
+ {
+  "doctype": "Notification",
+  "name": "AKD Purchase Order Approved",
+  "subject": "AKD Purchase Order {{ doc.name }} — Approved",
+  "document_type": "Purchase Order",
+  "event": "Value Change",
+  "value_changed": "workflow_state",
+  "enabled": 1,
+  "channel": "Email",
+  "is_standard": 0,
+  "condition": "doc.workflow_state == 'Approved' and doc.docstatus == 1",
+  "recipients": [
+   {
+    "doctype": "Notification Recipient",
+    "receiver_by_document_field": "contact_email",
+    "cc": "procurement@akd-consulting.ae"
+   }
+  ],
+  "message": "Dear {{ doc.supplier_name }},\n\nPlease find attached our Purchase Order {{ doc.name }} dated {{ doc.transaction_date }}.\n\nExpected Delivery: {{ doc.schedule_date }}\nTotal: {{ doc.currency }} {{ frappe.utils.fmt_money(doc.grand_total, currency=doc.currency) }}\n\nKindly acknowledge receipt and confirm the delivery schedule.\n\nAKD Consulting LLC",
+  "attach_print": 1,
+  "print_format": "AKD Purchase Order"
+ },
+ {
+  "doctype": "Notification",
+  "name": "AKD Purchase Order Awaiting Approval",
+  "subject": "PO {{ doc.name }} — awaiting {{ doc.workflow_state }}",
+  "document_type": "Purchase Order",
+  "event": "Value Change",
+  "value_changed": "workflow_state",
+  "enabled": 1,
+  "channel": "Email",
+  "is_standard": 0,
+  "condition": "doc.workflow_state in ('Pending Purchase Review', 'Pending End User', 'Pending Finance')",
+  "recipients": [
+   {
+    "doctype": "Notification Recipient",
+    "email_by_role": "Purchase Manager"
+   },
+   {
+    "doctype": "Notification Recipient",
+    "email_by_role": "Accounts Manager"
+   }
+  ],
+  "message": "Purchase Order {{ doc.name }} for supplier {{ doc.supplier_name }} ({{ doc.currency }} {{ frappe.utils.fmt_money(doc.grand_total, currency=doc.currency) }}) is awaiting {{ doc.workflow_state }}.\n\nLogin to ERPNext to review."
+ },
+ {
+  "doctype": "Notification",
+  "name": "AKD Purchase Receipt Submitted",
+  "subject": "Goods Received — {{ doc.name }} from {{ doc.supplier_name }}",
+  "document_type": "Purchase Receipt",
+  "event": "Submit",
+  "enabled": 1,
+  "channel": "Email",
+  "is_standard": 0,
+  "recipients": [
+   {
+    "doctype": "Notification Recipient",
+    "email_by_role": "Purchase Manager",
+    "cc": "finance@akd-consulting.ae"
+   }
+  ],
+  "message": "Goods received from {{ doc.supplier_name }} on {{ doc.posting_date }}.\n\nPR: {{ doc.name }}\nReceived value: {{ doc.currency }} {{ frappe.utils.fmt_money(doc.grand_total, currency=doc.currency) }}\nInspection: {{ doc.akd_inspection_result or 'Pending' }}\n\n3-way matching can now proceed for invoice posting."
+ },
+ {
+  "doctype": "Notification",
+  "name": "AKD Material Request Approval Required",
+  "subject": "MR {{ doc.name }} — awaiting {{ doc.workflow_state }}",
+  "document_type": "Material Request",
+  "event": "Value Change",
+  "value_changed": "workflow_state",
+  "enabled": 1,
+  "channel": "Email",
+  "is_standard": 0,
+  "condition": "doc.workflow_state in ('Pending Line Manager', 'Pending Management')",
+  "recipients": [
+   {
+    "doctype": "Notification Recipient",
+    "email_by_role": "Purchase Manager"
+   },
+   {
+    "doctype": "Notification Recipient",
+    "email_by_role": "Stock Manager"
+   }
+  ],
+  "message": "Material Request {{ doc.name }} raised by {{ doc.owner }} is awaiting {{ doc.workflow_state }}.\n\nMR Type: {{ doc.material_request_type }}\nRequired By: {{ doc.schedule_date }}\n\nReview at: {{ frappe.utils.get_url_to_form('Material Request', doc.name) }}"
+ },
+ {
+  "doctype": "Notification",
+  "name": "AKD Quotation Awaiting Approval",
+  "subject": "Quotation {{ doc.name }} awaiting approval",
+  "document_type": "Quotation",
+  "event": "Value Change",
+  "value_changed": "workflow_state",
+  "enabled": 1,
+  "channel": "Email",
+  "is_standard": 0,
+  "condition": "doc.workflow_state == 'Pending Approval'",
+  "recipients": [
+   {
+    "doctype": "Notification Recipient",
+    "email_by_role": "Sales Manager"
+   }
+  ],
+  "message": "Quotation {{ doc.name }} for {{ doc.customer_name or doc.party_name }} (value: {{ doc.currency }} {{ frappe.utils.fmt_money(doc.grand_total, currency=doc.currency) }}) is awaiting your approval.\n\nValid till: {{ doc.valid_till }}\n\nReview at: {{ frappe.utils.get_url_to_form('Quotation', doc.name) }}"
+ },
+ {
+  "doctype": "Notification",
+  "name": "AKD Quotation Approved",
+  "subject": "Quotation {{ doc.name }} from AKD Consulting LLC",
+  "document_type": "Quotation",
+  "event": "Value Change",
+  "value_changed": "workflow_state",
+  "enabled": 1,
+  "channel": "Email",
+  "is_standard": 0,
+  "condition": "doc.workflow_state == 'Approved' and doc.docstatus == 1",
+  "recipients": [
+   {
+    "doctype": "Notification Recipient",
+    "receiver_by_document_field": "contact_email",
+    "cc": "sales@akd-consulting.ae"
+   }
+  ],
+  "message": "Dear {{ doc.customer_name or doc.party_name }},\n\nPlease find attached our quotation {{ doc.name }} dated {{ doc.transaction_date }}.\n\nValid until: {{ doc.valid_till }}\nTotal: {{ doc.currency }} {{ frappe.utils.fmt_money(doc.grand_total, currency=doc.currency) }}\n\nWe look forward to your confirmation.\n\nAKD Consulting LLC",
+  "attach_print": 1,
+  "print_format": "AKD Quotation"
+ },
+ {
+  "doctype": "Notification",
+  "name": "AKD Sales Order Awaiting Approval",
+  "subject": "Sales Order {{ doc.name }} — awaiting {{ doc.workflow_state }}",
+  "document_type": "Sales Order",
+  "event": "Value Change",
+  "value_changed": "workflow_state",
+  "enabled": 1,
+  "channel": "Email",
+  "is_standard": 0,
+  "condition": "doc.workflow_state in ('Pending Sales Manager', 'Pending Finance Review')",
+  "recipients": [
+   {
+    "doctype": "Notification Recipient",
+    "email_by_role": "Sales Manager"
+   },
+   {
+    "doctype": "Notification Recipient",
+    "email_by_role": "Accounts Manager"
+   }
+  ],
+  "message": "Sales Order {{ doc.name }} for {{ doc.customer_name }} ({{ doc.currency }} {{ frappe.utils.fmt_money(doc.grand_total, currency=doc.currency) }}) is awaiting {{ doc.workflow_state }}.\n\nReview at: {{ frappe.utils.get_url_to_form('Sales Order', doc.name) }}"
+ },
+ {
+  "doctype": "Notification",
+  "name": "AKD Sales Order Approved",
+  "subject": "AKD Sales Order {{ doc.name }} — Confirmed",
+  "document_type": "Sales Order",
+  "event": "Value Change",
+  "value_changed": "workflow_state",
+  "enabled": 1,
+  "channel": "Email",
+  "is_standard": 0,
+  "condition": "doc.workflow_state == 'Approved' and doc.docstatus == 1",
+  "recipients": [
+   {
+    "doctype": "Notification Recipient",
+    "receiver_by_document_field": "contact_email",
+    "cc": "sales@akd-consulting.ae,warehouse@akd-consulting.ae"
+   }
+  ],
+  "message": "Dear {{ doc.customer_name }},\n\nWe confirm your order {{ doc.name }} dated {{ doc.transaction_date }} for {{ doc.currency }} {{ frappe.utils.fmt_money(doc.grand_total, currency=doc.currency) }}.\n\nDelivery date: {{ doc.delivery_date }}\nCustomer PO: {{ doc.po_no or '—' }}\n\nThank you for your business.\nAKD Consulting LLC",
+  "attach_print": 1,
+  "print_format": "AKD Sales Order"
+ },
+ {
+  "doctype": "Notification",
+  "name": "AKD Delivery Note Dispatched",
+  "subject": "Delivery Note {{ doc.name }} — dispatched",
+  "document_type": "Delivery Note",
+  "event": "Submit",
+  "enabled": 1,
+  "channel": "Email",
+  "is_standard": 0,
+  "condition": "not doc.is_return",
+  "recipients": [
+   {
+    "doctype": "Notification Recipient",
+    "receiver_by_document_field": "contact_email",
+    "cc": "sales@akd-consulting.ae"
+   }
+  ],
+  "message": "Dear {{ doc.customer_name }},\n\nWe have dispatched the goods covered by Delivery Note {{ doc.name }} dated {{ doc.posting_date }}.\n\n{% if doc.akd_gate_pass_no %}Gate Pass: {{ doc.akd_gate_pass_no }}\n{% endif %}{% if doc.transporter_name %}Transporter: {{ doc.transporter_name }}\n{% endif %}{% if doc.lr_no %}Tracking: {{ doc.lr_no }}\n{% endif %}\nPlease acknowledge receipt upon arrival.\n\nAKD Consulting LLC",
+  "attach_print": 1,
+  "print_format": "AKD Delivery Note"
+ },
+ {
+  "doctype": "Notification",
+  "name": "AKD Customer Return Received",
+  "subject": "Customer Return — {{ doc.name }} from {{ doc.customer_name }}",
+  "document_type": "Delivery Note",
+  "event": "Submit",
+  "enabled": 1,
+  "channel": "Email",
+  "is_standard": 0,
+  "condition": "doc.is_return",
+  "recipients": [
+   {
+    "doctype": "Notification Recipient",
+    "email_by_role": "Sales Manager",
+    "cc": "finance@akd-consulting.ae"
+   }
+  ],
+  "message": "Customer return submitted by {{ doc.customer_name }}.\n\nDN: {{ doc.name }}\nReturn Reason: {{ doc.akd_return_reason or 'Not specified' }}\nValue: {{ doc.currency }} {{ frappe.utils.fmt_money(doc.grand_total|abs, currency=doc.currency) }}\n\nA Credit Note may need to be raised (FR-SELL-70). Review at: {{ frappe.utils.get_url_to_form('Delivery Note', doc.name) }}"
+ }
+]

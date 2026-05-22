@@ -1,0 +1,354 @@
+[
+ {
+  "doctype": "Workflow",
+  "name": "AKD Material Request Approval",
+  "workflow_name": "AKD Material Request Approval",
+  "document_type": "Material Request",
+  "is_active": 1,
+  "send_email_alert": 1,
+  "workflow_state_field": "workflow_state",
+  "states": [
+   {
+    "doctype": "Workflow Document State",
+    "state": "Draft",
+    "doc_status": "0",
+    "allow_edit": "Purchase User",
+    "message": "FR-BUY-22: Indentor edits and submits for approval."
+   },
+   {
+    "doctype": "Workflow Document State",
+    "state": "Pending Line Manager",
+    "doc_status": "0",
+    "allow_edit": "Purchase Manager",
+    "message": "FR-BUY-22: Awaiting Line Manager review."
+   },
+   {
+    "doctype": "Workflow Document State",
+    "state": "Pending Management",
+    "doc_status": "0",
+    "allow_edit": "Stock Manager",
+    "message": "FR-BUY-22: Awaiting Management approval."
+   },
+   {
+    "doctype": "Workflow Document State",
+    "state": "Approved",
+    "doc_status": "1",
+    "allow_edit": "Purchase Manager",
+    "message": "FR-BUY-22: Approved — can be converted to PO."
+   },
+   {
+    "doctype": "Workflow Document State",
+    "state": "Rejected",
+    "doc_status": "0",
+    "allow_edit": "Purchase Manager",
+    "message": "Rejected — see comments. No further action."
+   }
+  ],
+  "transitions": [
+   {
+    "doctype": "Workflow Transition",
+    "state": "Draft",
+    "action": "Submit for Approval",
+    "next_state": "Pending Line Manager",
+    "allowed": "Purchase User",
+    "allow_self_approval": 0
+   },
+   {
+    "doctype": "Workflow Transition",
+    "state": "Pending Line Manager",
+    "action": "Approve",
+    "next_state": "Pending Management",
+    "allowed": "Purchase Manager",
+    "allow_self_approval": 0
+   },
+   {
+    "doctype": "Workflow Transition",
+    "state": "Pending Line Manager",
+    "action": "Reject",
+    "next_state": "Rejected",
+    "allowed": "Purchase Manager",
+    "allow_self_approval": 0
+   },
+   {
+    "doctype": "Workflow Transition",
+    "state": "Pending Management",
+    "action": "Approve",
+    "next_state": "Approved",
+    "allowed": "Stock Manager",
+    "allow_self_approval": 0
+   },
+   {
+    "doctype": "Workflow Transition",
+    "state": "Pending Management",
+    "action": "Reject",
+    "next_state": "Rejected",
+    "allowed": "Stock Manager",
+    "allow_self_approval": 0
+   }
+  ]
+ },
+ {
+  "doctype": "Workflow",
+  "name": "AKD Purchase Order Approval",
+  "workflow_name": "AKD Purchase Order Approval",
+  "document_type": "Purchase Order",
+  "is_active": 1,
+  "send_email_alert": 1,
+  "workflow_state_field": "workflow_state",
+  "states": [
+   {
+    "doctype": "Workflow Document State",
+    "state": "Draft",
+    "doc_status": "0",
+    "allow_edit": "Purchase User",
+    "message": "FR-BUY-37: PO drafted by Purchase officer."
+   },
+   {
+    "doctype": "Workflow Document State",
+    "state": "Pending Purchase Review",
+    "doc_status": "0",
+    "allow_edit": "Purchase Manager",
+    "message": "FR-BUY-37: Awaiting Purchase team review."
+   },
+   {
+    "doctype": "Workflow Document State",
+    "state": "Pending End User",
+    "doc_status": "0",
+    "allow_edit": "Projects User",
+    "message": "FR-BUY-37: Awaiting Projects / End User sign-off."
+   },
+   {
+    "doctype": "Workflow Document State",
+    "state": "Pending Finance",
+    "doc_status": "0",
+    "allow_edit": "Accounts Manager",
+    "message": "FR-BUY-37: Awaiting Finance approval."
+   },
+   {
+    "doctype": "Workflow Document State",
+    "state": "Approved",
+    "doc_status": "1",
+    "allow_edit": "Purchase Manager",
+    "message": "FR-BUY-37: Approved — supplier can be notified."
+   },
+   {
+    "doctype": "Workflow Document State",
+    "state": "Rejected",
+    "doc_status": "0",
+    "allow_edit": "Purchase Manager",
+    "message": "Rejected — see comments. No further action."
+   }
+  ],
+  "transitions": [
+   {
+    "doctype": "Workflow Transition",
+    "state": "Draft",
+    "action": "Submit for Approval",
+    "next_state": "Pending Purchase Review",
+    "allowed": "Purchase User",
+    "allow_self_approval": 0
+   },
+   {
+    "doctype": "Workflow Transition",
+    "state": "Pending Purchase Review",
+    "action": "Approve",
+    "next_state": "Pending End User",
+    "allowed": "Purchase Manager",
+    "allow_self_approval": 0
+   },
+   {
+    "doctype": "Workflow Transition",
+    "state": "Pending Purchase Review",
+    "action": "Reject",
+    "next_state": "Rejected",
+    "allowed": "Purchase Manager",
+    "allow_self_approval": 0
+   },
+   {
+    "doctype": "Workflow Transition",
+    "state": "Pending End User",
+    "action": "Approve",
+    "next_state": "Pending Finance",
+    "allowed": "Projects User",
+    "allow_self_approval": 0
+   },
+   {
+    "doctype": "Workflow Transition",
+    "state": "Pending End User",
+    "action": "Reject",
+    "next_state": "Rejected",
+    "allowed": "Projects User",
+    "allow_self_approval": 0
+   },
+   {
+    "doctype": "Workflow Transition",
+    "state": "Pending Finance",
+    "action": "Approve",
+    "next_state": "Approved",
+    "allowed": "Accounts Manager",
+    "allow_self_approval": 0
+   },
+   {
+    "doctype": "Workflow Transition",
+    "state": "Pending Finance",
+    "action": "Reject",
+    "next_state": "Rejected",
+    "allowed": "Accounts Manager",
+    "allow_self_approval": 0
+   }
+  ]
+ },
+ {
+  "doctype": "Workflow",
+  "name": "AKD Quotation Approval",
+  "workflow_name": "AKD Quotation Approval",
+  "document_type": "Quotation",
+  "is_active": 1,
+  "send_email_alert": 1,
+  "workflow_state_field": "workflow_state",
+  "states": [
+   {
+    "doctype": "Workflow Document State",
+    "state": "Draft",
+    "doc_status": "0",
+    "allow_edit": "Sales User",
+    "message": "FR-SELL-23: Sales User drafts the quotation."
+   },
+   {
+    "doctype": "Workflow Document State",
+    "state": "Pending Approval",
+    "doc_status": "0",
+    "allow_edit": "Sales Manager",
+    "message": "FR-SELL-23: Awaiting Sales Manager approval before sending to customer."
+   },
+   {
+    "doctype": "Workflow Document State",
+    "state": "Approved",
+    "doc_status": "1",
+    "allow_edit": "Sales Manager",
+    "message": "FR-SELL-23: Approved — quotation can be sent."
+   },
+   {
+    "doctype": "Workflow Document State",
+    "state": "Rejected",
+    "doc_status": "0",
+    "allow_edit": "Sales Manager",
+    "message": "Rejected — see comments."
+   }
+  ],
+  "transitions": [
+   {
+    "doctype": "Workflow Transition",
+    "state": "Draft",
+    "action": "Submit for Approval",
+    "next_state": "Pending Approval",
+    "allowed": "Sales User",
+    "allow_self_approval": 0
+   },
+   {
+    "doctype": "Workflow Transition",
+    "state": "Pending Approval",
+    "action": "Approve",
+    "next_state": "Approved",
+    "allowed": "Sales Manager",
+    "allow_self_approval": 0
+   },
+   {
+    "doctype": "Workflow Transition",
+    "state": "Pending Approval",
+    "action": "Reject",
+    "next_state": "Rejected",
+    "allowed": "Sales Manager",
+    "allow_self_approval": 0
+   }
+  ]
+ },
+ {
+  "doctype": "Workflow",
+  "name": "AKD Sales Order Approval",
+  "workflow_name": "AKD Sales Order Approval",
+  "document_type": "Sales Order",
+  "is_active": 1,
+  "send_email_alert": 1,
+  "workflow_state_field": "workflow_state",
+  "states": [
+   {
+    "doctype": "Workflow Document State",
+    "state": "Draft",
+    "doc_status": "0",
+    "allow_edit": "Sales User",
+    "message": "FR-SELL-27: Sales User drafts the SO from confirmed Quotation."
+   },
+   {
+    "doctype": "Workflow Document State",
+    "state": "Pending Sales Manager",
+    "doc_status": "0",
+    "allow_edit": "Sales Manager",
+    "message": "FR-SELL-27: Awaiting Sales Manager check (margins, pricing rules)."
+   },
+   {
+    "doctype": "Workflow Document State",
+    "state": "Pending Finance Review",
+    "doc_status": "0",
+    "allow_edit": "Accounts Manager",
+    "message": "FR-SELL-27: Awaiting Finance review (credit limit, payment terms)."
+   },
+   {
+    "doctype": "Workflow Document State",
+    "state": "Approved",
+    "doc_status": "1",
+    "allow_edit": "Sales Manager",
+    "message": "Approved — order in production / for dispatch."
+   },
+   {
+    "doctype": "Workflow Document State",
+    "state": "Rejected",
+    "doc_status": "0",
+    "allow_edit": "Sales Manager",
+    "message": "Rejected — see comments."
+   }
+  ],
+  "transitions": [
+   {
+    "doctype": "Workflow Transition",
+    "state": "Draft",
+    "action": "Submit for Approval",
+    "next_state": "Pending Sales Manager",
+    "allowed": "Sales User",
+    "allow_self_approval": 0
+   },
+   {
+    "doctype": "Workflow Transition",
+    "state": "Pending Sales Manager",
+    "action": "Approve",
+    "next_state": "Pending Finance Review",
+    "allowed": "Sales Manager",
+    "allow_self_approval": 0
+   },
+   {
+    "doctype": "Workflow Transition",
+    "state": "Pending Sales Manager",
+    "action": "Reject",
+    "next_state": "Rejected",
+    "allowed": "Sales Manager",
+    "allow_self_approval": 0
+   },
+   {
+    "doctype": "Workflow Transition",
+    "state": "Pending Finance Review",
+    "action": "Approve",
+    "next_state": "Approved",
+    "allowed": "Accounts Manager",
+    "allow_self_approval": 0
+   },
+   {
+    "doctype": "Workflow Transition",
+    "state": "Pending Finance Review",
+    "action": "Reject",
+    "next_state": "Rejected",
+    "allowed": "Accounts Manager",
+    "allow_self_approval": 0
+   }
+  ]
+ }
+]

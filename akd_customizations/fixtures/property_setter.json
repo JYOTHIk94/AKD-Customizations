@@ -1,0 +1,24 @@
+[
+ {
+  "doctype": "Property Setter",
+  "name": "Purchase Invoice-bill_no-reqd",
+  "doc_type": "Purchase Invoice",
+  "field_name": "bill_no",
+  "property": "reqd",
+  "property_type": "Check",
+  "value": "1",
+  "module": "Accounting",
+  "doctype_or_field": "DocField"
+ },
+ {
+  "doctype": "Property Setter",
+  "name": "Purchase Invoice-bill_date-reqd",
+  "doc_type": "Purchase Invoice",
+  "field_name": "bill_date",
+  "property": "reqd",
+  "property_type": "Check",
+  "value": "1",
+  "module": "Accounting",
+  "doctype_or_field": "DocField"
+ }
+]

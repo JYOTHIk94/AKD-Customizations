@@ -1,0 +1,145 @@
+{%- set company = frappe.get_doc("Company", doc.company) -%}
+{%- set supplier_address = frappe.get_doc("Address", doc.supplier_address) if doc.supplier_address else None -%}
+
+<div class="akd-pi" style="font-family: 'Helvetica', 'Arial', sans-serif; font-size: 10pt; color: #111;">
+
+  <!-- HEADER -->
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 16px;">
+    <tr>
+      <td style="vertical-align: top; width: 60%;">
+        {% if company.company_logo %}
+          <img src="{{ company.company_logo }}" style="max-height: 70px; max-width: 240px;" />
+        {% endif %}
+        <div style="margin-top: 8px; font-size: 9pt; line-height: 1.4;">
+          <strong style="font-size: 11pt;">{{ company.company_name }}</strong><br />
+          3302 Prism Tower, Business Bay, Dubai, UAE<br />
+          {% if company.tax_id %}<strong>TRN:</strong> {{ company.tax_id }}<br />{% endif %}
+        </div>
+      </td>
+      <td style="vertical-align: top; width: 40%; text-align: right;">
+        <div style="font-size: 18pt; font-weight: bold; letter-spacing: 1px;">
+          {% if doc.is_return %}DEBIT NOTE{% else %}PURCHASE INVOICE{% endif %}
+        </div>
+        <table style="width: 100%; font-size: 9pt; margin-top: 12px;">
+          <tr><td style="text-align: right;"><strong>Our Ref:</strong></td><td style="text-align: right;">{{ doc.name }}</td></tr>
+          {% if doc.bill_no %}<tr><td style="text-align: right;"><strong>Supplier Inv No:</strong></td><td style="text-align: right;">{{ doc.bill_no }}</td></tr>{% endif %}
+          {% if doc.bill_date %}<tr><td style="text-align: right;"><strong>Supplier Inv Date:</strong></td><td style="text-align: right;">{{ frappe.utils.formatdate(doc.bill_date, "dd-MMM-yyyy") }}</td></tr>{% endif %}
+          <tr><td style="text-align: right;"><strong>Posting Date:</strong></td><td style="text-align: right;">{{ frappe.utils.formatdate(doc.posting_date, "dd-MMM-yyyy") }}</td></tr>
+          {% if doc.due_date %}<tr><td style="text-align: right;"><strong>Due Date:</strong></td><td style="text-align: right;">{{ frappe.utils.formatdate(doc.due_date, "dd-MMM-yyyy") }}</td></tr>{% endif %}
+          <tr><td style="text-align: right;"><strong>Currency:</strong></td><td style="text-align: right;">{{ doc.currency }}</td></tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <!-- SUPPLIER -->
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 12px;">
+    <tr>
+      <td style="background: #f4f4f4; padding: 6px 10px; font-weight: bold; font-size: 9pt;">SUPPLIER</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px 10px; vertical-align: top; font-size: 9pt; line-height: 1.4; border: 1px solid #ddd;">
+        <strong>{{ doc.supplier_name }}</strong><br />
+        {% if supplier_address %}
+          {{ supplier_address.address_line1 or '' }}{% if supplier_address.address_line2 %}, {{ supplier_address.address_line2 }}{% endif %}<br />
+          {{ supplier_address.city or '' }}{% if supplier_address.state %}, {{ supplier_address.state }}{% endif %} {{ supplier_address.country or '' }}<br />
+        {% endif %}
+        {% if doc.tax_id %}<strong>Supplier TRN:</strong> {{ doc.tax_id }}{% endif %}
+        {% if doc.is_return and doc.akd_return_reason %}<br /><strong>Return Reason:</strong> {{ doc.akd_return_reason }}{% endif %}
+      </td>
+    </tr>
+  </table>
+
+  <!-- ITEMS -->
+  <table style="width: 100%; border-collapse: collapse; font-size: 9pt; margin-bottom: 16px;">
+    <thead>
+      <tr style="background: #333; color: #fff;">
+        <th style="padding: 6px 8px; text-align: left; width: 4%;">#</th>
+        <th style="padding: 6px 8px; text-align: left; width: 13%;">Item</th>
+        <th style="padding: 6px 8px; text-align: left; width: 35%;">Description</th>
+        <th style="padding: 6px 8px; text-align: right; width: 10%;">Qty</th>
+        <th style="padding: 6px 8px; text-align: right; width: 7%;">UoM</th>
+        <th style="padding: 6px 8px; text-align: right; width: 13%;">Rate</th>
+        <th style="padding: 6px 8px; text-align: right; width: 13%;">Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in doc.items %}
+        <tr style="border-bottom: 1px solid #eee;">
+          <td style="padding: 6px 8px; vertical-align: top;">{{ row.idx }}</td>
+          <td style="padding: 6px 8px; vertical-align: top;">{{ row.item_code }}</td>
+          <td style="padding: 6px 8px; vertical-align: top;">
+            <strong>{{ row.item_name }}</strong>
+            {% if row.description and row.description != row.item_name %}<br /><span style="color: #555; font-size: 8.5pt;">{{ row.description|striptags }}</span>{% endif %}
+            {% if row.purchase_order %}<br /><span style="color:#777; font-size:8.5pt;">PO: {{ row.purchase_order }}{% if row.purchase_receipt %} | GRN: {{ row.purchase_receipt }}{% endif %}</span>{% endif %}
+          </td>
+          <td style="padding: 6px 8px; text-align: right; vertical-align: top;">{{ row.qty }}</td>
+          <td style="padding: 6px 8px; text-align: right; vertical-align: top;">{{ row.uom }}</td>
+          <td style="padding: 6px 8px; text-align: right; vertical-align: top;">{{ frappe.utils.fmt_money(row.rate, currency=doc.currency) }}</td>
+          <td style="padding: 6px 8px; text-align: right; vertical-align: top;">{{ frappe.utils.fmt_money(row.amount, currency=doc.currency) }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- TOTALS + TERMS -->
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 12px;">
+    <tr>
+      <td style="width: 55%; vertical-align: top; padding-right: 12px;">
+        {% if doc.terms %}
+          <div style="font-size: 9pt;">
+            <strong>Terms &amp; Conditions</strong><br />
+            <div style="margin-top: 4px; color: #444;">{{ doc.terms }}</div>
+          </div>
+        {% endif %}
+        {% if doc.payment_terms_template %}
+          <div style="font-size: 9pt; margin-top: 8px;">
+            <strong>Payment Terms:</strong> {{ doc.payment_terms_template }}
+          </div>
+        {% endif %}
+      </td>
+      <td style="width: 45%; vertical-align: top;">
+        <table style="width: 100%; font-size: 9pt; border-collapse: collapse;">
+          <tr>
+            <td style="padding: 4px 8px; text-align: right;">Net Total</td>
+            <td style="padding: 4px 8px; text-align: right; width: 40%;">{{ frappe.utils.fmt_money(doc.net_total, currency=doc.currency) }}</td>
+          </tr>
+          {% if doc.total_taxes_and_charges %}
+            {% for tax in doc.taxes %}
+              <tr>
+                <td style="padding: 4px 8px; text-align: right;">{{ tax.description }}</td>
+                <td style="padding: 4px 8px; text-align: right;">{{ frappe.utils.fmt_money(tax.tax_amount, currency=doc.currency) }}</td>
+              </tr>
+            {% endfor %}
+          {% endif %}
+          {% if doc.discount_amount %}
+            <tr>
+              <td style="padding: 4px 8px; text-align: right;">Discount</td>
+              <td style="padding: 4px 8px; text-align: right;">-{{ frappe.utils.fmt_money(doc.discount_amount, currency=doc.currency) }}</td>
+            </tr>
+          {% endif %}
+          <tr style="background: #333; color: #fff;">
+            <td style="padding: 8px; text-align: right; font-weight: bold;">GRAND TOTAL</td>
+            <td style="padding: 8px; text-align: right; font-weight: bold;">{{ frappe.utils.fmt_money(doc.grand_total, currency=doc.currency) }}</td>
+          </tr>
+          {% if doc.outstanding_amount and doc.outstanding_amount != doc.grand_total %}
+            <tr>
+              <td style="padding: 4px 8px; text-align: right; color: #b00;">Outstanding</td>
+              <td style="padding: 4px 8px; text-align: right; color: #b00;">{{ frappe.utils.fmt_money(doc.outstanding_amount, currency=doc.currency) }}</td>
+            </tr>
+          {% endif %}
+        </table>
+        <div style="margin-top: 6px; font-size: 8.5pt; color: #555; text-align: right;">
+          <em>Amount in words: {{ doc.in_words }}</em>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- FOOTER -->
+  <div style="margin-top: 24px; padding-top: 8px; border-top: 1px solid #ccc; font-size: 8pt; color: #666; text-align: center;">
+    AKD Consulting LLC &nbsp;|&nbsp; TRN {{ company.tax_id or '104661110700003' }} &nbsp;|&nbsp; 3302 Prism Tower, Business Bay, Dubai, UAE<br />
+    Computer-generated voucher. For queries email finance@akd-consulting.ae.
+  </div>
+
+</div>

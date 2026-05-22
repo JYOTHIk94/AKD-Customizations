@@ -1,0 +1,42 @@
+[
+ {
+  "doctype": "Supplier Scorecard Criteria",
+  "name": "AKD On-Time Delivery",
+  "criteria_name": "AKD On-Time Delivery",
+  "max_score": 100.0,
+  "weight": 30.0,
+  "formula": "({cost_of_on_time_shipments} / {tot_cost_shipments}) * 100 if {tot_cost_shipments} > 0 else 100"
+ },
+ {
+  "doctype": "Supplier Scorecard Criteria",
+  "name": "AKD Quality",
+  "criteria_name": "AKD Quality",
+  "max_score": 100.0,
+  "weight": 25.0,
+  "formula": "({total_accepted_amount} / {total_received_amount}) * 100 if {total_received_amount} > 0 else 100"
+ },
+ {
+  "doctype": "Supplier Scorecard Criteria",
+  "name": "AKD Pricing Competitiveness",
+  "criteria_name": "AKD Pricing Competitiveness",
+  "max_score": 100.0,
+  "weight": 20.0,
+  "formula": "({sq_total_number} / {rfq_total_number}) * 100 if {rfq_total_number} > 0 else 100"
+ },
+ {
+  "doctype": "Supplier Scorecard Criteria",
+  "name": "AKD Responsiveness",
+  "criteria_name": "AKD Responsiveness",
+  "max_score": 100.0,
+  "weight": 15.0,
+  "formula": "max(0, 100 - ({rfq_response_days} * 5))"
+ },
+ {
+  "doctype": "Supplier Scorecard Criteria",
+  "name": "AKD Compliance",
+  "criteria_name": "AKD Compliance",
+  "max_score": 100.0,
+  "weight": 10.0,
+  "formula": "100"
+ }
+]

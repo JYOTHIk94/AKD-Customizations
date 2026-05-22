@@ -1,0 +1,58 @@
+[
+ {
+  "doctype": "Supplier Scorecard Standing",
+  "name": "AKD Excellent",
+  "standing_name": "AKD Excellent",
+  "standing_color": "Green",
+  "min_grade": 80.0,
+  "max_grade": 100.0,
+  "warn_rfqs": 0,
+  "warn_pos": 0,
+  "prevent_rfqs": 0,
+  "prevent_pos": 0,
+  "notify_supplier": 0,
+  "notify_employee": 0
+ },
+ {
+  "doctype": "Supplier Scorecard Standing",
+  "name": "AKD Good",
+  "standing_name": "AKD Good",
+  "standing_color": "Blue",
+  "min_grade": 60.0,
+  "max_grade": 79.99,
+  "warn_rfqs": 0,
+  "warn_pos": 0,
+  "prevent_rfqs": 0,
+  "prevent_pos": 0,
+  "notify_supplier": 0,
+  "notify_employee": 0
+ },
+ {
+  "doctype": "Supplier Scorecard Standing",
+  "name": "AKD Average",
+  "standing_name": "AKD Average",
+  "standing_color": "Yellow",
+  "min_grade": 40.0,
+  "max_grade": 59.99,
+  "warn_rfqs": 1,
+  "warn_pos": 1,
+  "prevent_rfqs": 0,
+  "prevent_pos": 0,
+  "notify_supplier": 0,
+  "notify_employee": 1
+ },
+ {
+  "doctype": "Supplier Scorecard Standing",
+  "name": "AKD Poor",
+  "standing_name": "AKD Poor",
+  "standing_color": "Red",
+  "min_grade": 0.0,
+  "max_grade": 39.99,
+  "warn_rfqs": 1,
+  "warn_pos": 1,
+  "prevent_rfqs": 0,
+  "prevent_pos": 0,
+  "notify_supplier": 0,
+  "notify_employee": 1
+ }
+]

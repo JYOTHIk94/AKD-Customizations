@@ -1,0 +1,59 @@
+[
+ {
+  "doctype": "Payment Terms Template",
+  "name": "AKD Customer Standard",
+  "template_name": "AKD Customer Standard",
+  "terms": [
+   {
+    "doctype": "Payment Terms Template Detail",
+    "payment_term": "AKD-Net-30",
+    "invoice_portion": 100.0,
+    "due_date_based_on": "Day(s) after invoice date",
+    "credit_days": 30,
+    "credit_months": 0,
+    "description": "Net 30 days"
+   }
+  ]
+ },
+ {
+  "doctype": "Payment Terms Template",
+  "name": "AKD Supplier Standard",
+  "template_name": "AKD Supplier Standard",
+  "terms": [
+   {
+    "doctype": "Payment Terms Template Detail",
+    "payment_term": "AKD-Net-45",
+    "invoice_portion": 100.0,
+    "due_date_based_on": "Day(s) after invoice date",
+    "credit_days": 45,
+    "credit_months": 0,
+    "description": "Net 45 days"
+   }
+  ]
+ },
+ {
+  "doctype": "Payment Terms Template",
+  "name": "AKD 50/50 Split",
+  "template_name": "AKD 50/50 Split",
+  "terms": [
+   {
+    "doctype": "Payment Terms Template Detail",
+    "payment_term": "AKD-Advance-50",
+    "invoice_portion": 50.0,
+    "due_date_based_on": "Day(s) after invoice date",
+    "credit_days": 0,
+    "credit_months": 0,
+    "description": "50% advance on order"
+   },
+   {
+    "doctype": "Payment Terms Template Detail",
+    "payment_term": "AKD-Delivery-50",
+    "invoice_portion": 50.0,
+    "due_date_based_on": "Day(s) after invoice date",
+    "credit_days": 30,
+    "credit_months": 0,
+    "description": "50% balance on delivery"
+   }
+  ]
+ }
+]

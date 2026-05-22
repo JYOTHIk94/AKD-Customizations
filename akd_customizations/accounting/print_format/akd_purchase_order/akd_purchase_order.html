@@ -1,0 +1,169 @@
+{%- set company = frappe.get_doc("Company", doc.company) -%}
+{%- set company_address = frappe.get_doc("Address", doc.billing_address) if doc.billing_address else None -%}
+{%- set supplier_address = frappe.get_doc("Address", doc.supplier_address) if doc.supplier_address else None -%}
+{%- set ship_address = frappe.get_doc("Address", doc.shipping_address) if doc.shipping_address else None -%}
+
+<div class="akd-po" style="font-family: 'Helvetica', 'Arial', sans-serif; font-size: 10pt; color: #111;">
+
+  <!-- HEADER -->
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 16px;">
+    <tr>
+      <td style="vertical-align: top; width: 60%;">
+        {% if company.company_logo %}
+          <img src="{{ company.company_logo }}" style="max-height: 70px; max-width: 240px;" />
+        {% endif %}
+        <div style="margin-top: 8px; font-size: 9pt; line-height: 1.4;">
+          <strong style="font-size: 11pt;">{{ company.company_name }}</strong><br />
+          {% if company_address %}
+            {{ company_address.address_line1 or '' }}{% if company_address.address_line2 %}, {{ company_address.address_line2 }}{% endif %}<br />
+            {{ company_address.city or '' }}{% if company_address.state %}, {{ company_address.state }}{% endif %} {{ company_address.country or '' }}<br />
+          {% endif %}
+          {% if company.tax_id %}<strong>TRN:</strong> {{ company.tax_id }}<br />{% endif %}
+          {% if company.email %}{{ company.email }}{% endif %}
+          {% if company.phone_no %} &nbsp;|&nbsp; {{ company.phone_no }}{% endif %}
+        </div>
+      </td>
+      <td style="vertical-align: top; width: 40%; text-align: right;">
+        <div style="font-size: 18pt; font-weight: bold; letter-spacing: 1px;">PURCHASE ORDER</div>
+        <table style="width: 100%; font-size: 9pt; margin-top: 12px;">
+          <tr><td style="text-align: right;"><strong>PO No:</strong></td><td style="text-align: right;">{{ doc.name }}</td></tr>
+          <tr><td style="text-align: right;"><strong>PO Date:</strong></td><td style="text-align: right;">{{ frappe.utils.formatdate(doc.transaction_date, "dd-MMM-yyyy") }}</td></tr>
+          {% if doc.schedule_date %}<tr><td style="text-align: right;"><strong>Expected Delivery:</strong></td><td style="text-align: right;">{{ frappe.utils.formatdate(doc.schedule_date, "dd-MMM-yyyy") }}</td></tr>{% endif %}
+          {% if doc.akd_customer_po_ref %}<tr><td style="text-align: right;"><strong>Customer PO:</strong></td><td style="text-align: right;">{{ doc.akd_customer_po_ref }}</td></tr>{% endif %}
+          {% if doc.akd_order_confirmation_no %}<tr><td style="text-align: right;"><strong>Supplier Order Conf:</strong></td><td style="text-align: right;">{{ doc.akd_order_confirmation_no }}</td></tr>{% endif %}
+          <tr><td style="text-align: right;"><strong>Currency:</strong></td><td style="text-align: right;">{{ doc.currency }}</td></tr>
+          {% if doc.workflow_state %}<tr><td style="text-align: right;"><strong>Status:</strong></td><td style="text-align: right;">{{ doc.workflow_state }}</td></tr>{% endif %}
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <!-- SUPPLIER + SHIP TO -->
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 12px;">
+    <tr>
+      <td style="background: #f4f4f4; padding: 6px 10px; font-weight: bold; font-size: 9pt; width: 50%;">SUPPLIER</td>
+      <td style="background: #f4f4f4; padding: 6px 10px; font-weight: bold; font-size: 9pt; border-left: 1px solid #fff;">SHIP TO</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px 10px; vertical-align: top; font-size: 9pt; line-height: 1.4; border: 1px solid #ddd;">
+        <strong>{{ doc.supplier_name }}</strong><br />
+        {% if supplier_address %}
+          {{ supplier_address.address_line1 or '' }}{% if supplier_address.address_line2 %}, {{ supplier_address.address_line2 }}{% endif %}<br />
+          {{ supplier_address.city or '' }}{% if supplier_address.state %}, {{ supplier_address.state }}{% endif %} {{ supplier_address.country or '' }}<br />
+        {% endif %}
+        {% if doc.contact_person %}Attn: {{ doc.contact_display or doc.contact_person }}<br />{% endif %}
+        {% if doc.contact_email %}{{ doc.contact_email }}{% endif %}
+        {% if doc.contact_mobile %} &nbsp;|&nbsp; {{ doc.contact_mobile }}{% endif %}
+      </td>
+      <td style="padding: 8px 10px; vertical-align: top; font-size: 9pt; line-height: 1.4; border: 1px solid #ddd;">
+        {% if ship_address %}
+          {{ ship_address.address_line1 or '' }}{% if ship_address.address_line2 %}, {{ ship_address.address_line2 }}{% endif %}<br />
+          {{ ship_address.city or '' }}{% if ship_address.state %}, {{ ship_address.state }}{% endif %} {{ ship_address.country or '' }}<br />
+        {% else %}
+          {{ company.company_name }}
+        {% endif %}
+        {% if doc.incoterm %}<br /><strong>Incoterm:</strong> {{ doc.incoterm }}{% endif %}
+      </td>
+    </tr>
+  </table>
+
+  <!-- ITEMS -->
+  <table style="width: 100%; border-collapse: collapse; font-size: 9pt; margin-bottom: 16px;">
+    <thead>
+      <tr style="background: #333; color: #fff;">
+        <th style="padding: 6px 8px; text-align: left; width: 4%;">#</th>
+        <th style="padding: 6px 8px; text-align: left; width: 12%;">Item</th>
+        <th style="padding: 6px 8px; text-align: left; width: 30%;">Description</th>
+        <th style="padding: 6px 8px; text-align: right; width: 10%;">Qty</th>
+        <th style="padding: 6px 8px; text-align: right; width: 7%;">UoM</th>
+        <th style="padding: 6px 8px; text-align: right; width: 12%;">Expected</th>
+        <th style="padding: 6px 8px; text-align: right; width: 12%;">Rate</th>
+        <th style="padding: 6px 8px; text-align: right; width: 13%;">Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in doc.items %}
+        <tr style="border-bottom: 1px solid #eee;">
+          <td style="padding: 6px 8px; vertical-align: top;">{{ row.idx }}</td>
+          <td style="padding: 6px 8px; vertical-align: top;">{{ row.item_code }}</td>
+          <td style="padding: 6px 8px; vertical-align: top;">
+            <strong>{{ row.item_name }}</strong>
+            {% if row.description and row.description != row.item_name %}<br /><span style="color: #555; font-size: 8.5pt;">{{ row.description|striptags }}</span>{% endif %}
+            {% if row.supplier_part_no %}<br /><span style="color:#777; font-size:8.5pt;">Supplier P/N: {{ row.supplier_part_no }}</span>{% endif %}
+          </td>
+          <td style="padding: 6px 8px; text-align: right; vertical-align: top;">{{ row.qty }}</td>
+          <td style="padding: 6px 8px; text-align: right; vertical-align: top;">{{ row.uom }}</td>
+          <td style="padding: 6px 8px; text-align: right; vertical-align: top;">{{ frappe.utils.formatdate(row.schedule_date, "dd-MMM-yyyy") if row.schedule_date else '' }}</td>
+          <td style="padding: 6px 8px; text-align: right; vertical-align: top;">{{ frappe.utils.fmt_money(row.rate, currency=doc.currency) }}</td>
+          <td style="padding: 6px 8px; text-align: right; vertical-align: top;">{{ frappe.utils.fmt_money(row.amount, currency=doc.currency) }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- TOTALS -->
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 12px;">
+    <tr>
+      <td style="width: 55%; vertical-align: top; padding-right: 12px;">
+        {% if doc.terms %}
+          <div style="font-size: 9pt;">
+            <strong>Terms &amp; Conditions</strong><br />
+            <div style="margin-top: 4px; color: #444;">{{ doc.terms }}</div>
+          </div>
+        {% endif %}
+      </td>
+      <td style="width: 45%; vertical-align: top;">
+        <table style="width: 100%; font-size: 9pt; border-collapse: collapse;">
+          <tr>
+            <td style="padding: 4px 8px; text-align: right;">Net Total</td>
+            <td style="padding: 4px 8px; text-align: right; width: 40%;">{{ frappe.utils.fmt_money(doc.net_total, currency=doc.currency) }}</td>
+          </tr>
+          {% if doc.total_taxes_and_charges %}
+            {% for tax in doc.taxes %}
+              <tr>
+                <td style="padding: 4px 8px; text-align: right;">{{ tax.description }}</td>
+                <td style="padding: 4px 8px; text-align: right;">{{ frappe.utils.fmt_money(tax.tax_amount, currency=doc.currency) }}</td>
+              </tr>
+            {% endfor %}
+          {% endif %}
+          {% if doc.discount_amount %}
+            <tr>
+              <td style="padding: 4px 8px; text-align: right;">Discount</td>
+              <td style="padding: 4px 8px; text-align: right;">-{{ frappe.utils.fmt_money(doc.discount_amount, currency=doc.currency) }}</td>
+            </tr>
+          {% endif %}
+          <tr style="background: #333; color: #fff;">
+            <td style="padding: 8px; text-align: right; font-weight: bold;">GRAND TOTAL</td>
+            <td style="padding: 8px; text-align: right; font-weight: bold;">{{ frappe.utils.fmt_money(doc.grand_total, currency=doc.currency) }}</td>
+          </tr>
+        </table>
+        <div style="margin-top: 6px; font-size: 8.5pt; color: #555; text-align: right;">
+          <em>Amount in words: {{ doc.in_words }}</em>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- SIGNATURES -->
+  <table style="width: 100%; margin-top: 32px; font-size: 9pt;">
+    <tr>
+      <td style="width: 50%; padding-right: 24px;">
+        <div style="border-top: 1px solid #999; padding-top: 4px; text-align: center;">
+          Authorised by AKD Consulting LLC
+        </div>
+      </td>
+      <td style="width: 50%; padding-left: 24px;">
+        <div style="border-top: 1px solid #999; padding-top: 4px; text-align: center;">
+          Acknowledged by Supplier (sign &amp; date)
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- FOOTER -->
+  <div style="margin-top: 24px; padding-top: 8px; border-top: 1px solid #ccc; font-size: 8pt; color: #666; text-align: center;">
+    AKD Consulting LLC &nbsp;|&nbsp; TRN {{ company.tax_id or '104661110700003' }} &nbsp;|&nbsp; 3302 Prism Tower, Business Bay, Dubai, UAE<br />
+    This is a computer-generated purchase order and is valid without signature when emailed from purchasing@akd-consulting.ae.
+  </div>
+
+</div>

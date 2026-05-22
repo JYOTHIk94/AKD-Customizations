@@ -1,0 +1,121 @@
+{%- set company = frappe.get_doc("Company", doc.company) -%}
+{%- set ship_address = frappe.get_doc("Address", doc.shipping_address_name) if doc.shipping_address_name else None -%}
+
+<div class="akd-dn" style="font-family: 'Helvetica', 'Arial', sans-serif; font-size: 10pt; color: #111;">
+
+  <!-- HEADER -->
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 16px;">
+    <tr>
+      <td style="vertical-align: top; width: 60%;">
+        {% if company.company_logo %}
+          <img src="{{ company.company_logo }}" style="max-height: 70px; max-width: 240px;" />
+        {% endif %}
+        <div style="margin-top: 8px; font-size: 9pt; line-height: 1.4;">
+          <strong style="font-size: 11pt;">{{ company.company_name }}</strong><br />
+          3302 Prism Tower, Business Bay, Dubai, UAE<br />
+          {% if company.tax_id %}<strong>TRN:</strong> {{ company.tax_id }}<br />{% endif %}
+        </div>
+      </td>
+      <td style="vertical-align: top; width: 40%; text-align: right;">
+        <div style="font-size: 18pt; font-weight: bold; letter-spacing: 1px;">
+          {% if doc.is_return %}CUSTOMER RETURN NOTE{% else %}DELIVERY NOTE{% endif %}
+        </div>
+        <table style="width: 100%; font-size: 9pt; margin-top: 12px;">
+          <tr><td style="text-align: right;"><strong>DN No:</strong></td><td style="text-align: right;">{{ doc.name }}</td></tr>
+          <tr><td style="text-align: right;"><strong>Date:</strong></td><td style="text-align: right;">{{ frappe.utils.formatdate(doc.posting_date, "dd-MMM-yyyy") }}</td></tr>
+          {% if doc.akd_gate_pass_no %}<tr><td style="text-align: right;"><strong>Gate Pass:</strong></td><td style="text-align: right;">{{ doc.akd_gate_pass_no }}</td></tr>{% endif %}
+          {% if doc.lr_no %}<tr><td style="text-align: right;"><strong>Transporter Ref:</strong></td><td style="text-align: right;">{{ doc.lr_no }}</td></tr>{% endif %}
+          {% if doc.transporter_name %}<tr><td style="text-align: right;"><strong>Transporter:</strong></td><td style="text-align: right;">{{ doc.transporter_name }}</td></tr>{% endif %}
+          {% if doc.vehicle_no %}<tr><td style="text-align: right;"><strong>Vehicle:</strong></td><td style="text-align: right;">{{ doc.vehicle_no }}</td></tr>{% endif %}
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <!-- SHIP TO + Installation -->
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 12px;">
+    <tr>
+      <td style="background: #f4f4f4; padding: 6px 10px; font-weight: bold; font-size: 9pt; width: 60%;">DELIVER TO</td>
+      <td style="background: #f4f4f4; padding: 6px 10px; font-weight: bold; font-size: 9pt;">INSTALLATION</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px 10px; vertical-align: top; font-size: 9pt; line-height: 1.4; border: 1px solid #ddd;">
+        <strong>{{ doc.customer_name }}</strong><br />
+        {% if ship_address %}
+          {{ ship_address.address_line1 or '' }}{% if ship_address.address_line2 %}, {{ ship_address.address_line2 }}{% endif %}<br />
+          {{ ship_address.city or '' }}{% if ship_address.state %}, {{ ship_address.state }}{% endif %} {{ ship_address.country or '' }}<br />
+        {% endif %}
+      </td>
+      <td style="padding: 8px 10px; vertical-align: top; font-size: 9pt; line-height: 1.4; border: 1px solid #ddd;">
+        Status:
+        {% set st = doc.akd_installation_status or 'Not Required' %}
+        {% if st == 'Completed' %}
+          <span style="color: #2a8; font-weight: bold;">COMPLETED</span>
+        {% elif st in ('Pending', 'In Progress') %}
+          <span style="color: #c80; font-weight: bold;">{{ st|upper }}</span>
+        {% else %}
+          <span style="color: #888;">{{ st }}</span>
+        {% endif %}
+        {% if doc.is_return and doc.akd_return_reason %}<br /><strong>Return Reason:</strong> {{ doc.akd_return_reason }}{% endif %}
+      </td>
+    </tr>
+  </table>
+
+  <!-- ITEMS -->
+  <table style="width: 100%; border-collapse: collapse; font-size: 9pt; margin-bottom: 16px;">
+    <thead>
+      <tr style="background: #333; color: #fff;">
+        <th style="padding: 6px 8px; text-align: left; width: 4%;">#</th>
+        <th style="padding: 6px 8px; text-align: left; width: 14%;">Item</th>
+        <th style="padding: 6px 8px; text-align: left; width: 36%;">Description</th>
+        <th style="padding: 6px 8px; text-align: right; width: 10%;">Qty</th>
+        <th style="padding: 6px 8px; text-align: right; width: 8%;">UoM</th>
+        <th style="padding: 6px 8px; text-align: left; width: 14%;">From Warehouse</th>
+        <th style="padding: 6px 8px; text-align: right; width: 14%;">SO Ref</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in doc.items %}
+        <tr style="border-bottom: 1px solid #eee;">
+          <td style="padding: 6px 8px; vertical-align: top;">{{ row.idx }}</td>
+          <td style="padding: 6px 8px; vertical-align: top;">{{ row.item_code }}</td>
+          <td style="padding: 6px 8px; vertical-align: top;">
+            <strong>{{ row.item_name }}</strong>
+            {% if row.description and row.description != row.item_name %}<br /><span style="color: #555; font-size: 8.5pt;">{{ row.description|striptags }}</span>{% endif %}
+          </td>
+          <td style="padding: 6px 8px; text-align: right; vertical-align: top;">{{ row.qty }}</td>
+          <td style="padding: 6px 8px; text-align: right; vertical-align: top;">{{ row.uom }}</td>
+          <td style="padding: 6px 8px; vertical-align: top; font-size: 8.5pt;">{{ row.warehouse or '' }}</td>
+          <td style="padding: 6px 8px; text-align: right; vertical-align: top; font-size: 8.5pt;">{{ row.against_sales_order or '' }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- ACKNOWLEDGEMENT -->
+  <table style="width: 100%; margin-top: 32px; font-size: 9pt;">
+    <tr>
+      <td style="width: 33%; padding-right: 16px;">
+        <div style="border-top: 1px solid #999; padding-top: 4px; text-align: center;">
+          Dispatched by AKD
+        </div>
+      </td>
+      <td style="width: 33%; padding: 0 16px;">
+        <div style="border-top: 1px solid #999; padding-top: 4px; text-align: center;">
+          Driver / Courier
+        </div>
+      </td>
+      <td style="width: 33%; padding-left: 16px;">
+        <div style="border-top: 1px solid #999; padding-top: 4px; text-align: center;">
+          Customer received (sign + date + stamp)
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- FOOTER -->
+  <div style="margin-top: 24px; padding-top: 8px; border-top: 1px solid #ccc; font-size: 8pt; color: #666; text-align: center;">
+    AKD Consulting LLC &nbsp;|&nbsp; TRN {{ company.tax_id or '104661110700003' }} &nbsp;|&nbsp; 3302 Prism Tower, Business Bay, Dubai, UAE
+  </div>
+
+</div>

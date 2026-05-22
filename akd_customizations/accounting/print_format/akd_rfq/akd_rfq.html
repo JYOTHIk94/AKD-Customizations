@@ -1,0 +1,114 @@
+{%- set company = frappe.get_doc("Company", doc.company) -%}
+
+<div class="akd-rfq" style="font-family: 'Helvetica', 'Arial', sans-serif; font-size: 10pt; color: #111;">
+
+  <!-- HEADER -->
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 16px;">
+    <tr>
+      <td style="vertical-align: top; width: 60%;">
+        {% if company.company_logo %}
+          <img src="{{ company.company_logo }}" style="max-height: 70px; max-width: 240px;" />
+        {% endif %}
+        <div style="margin-top: 8px; font-size: 9pt; line-height: 1.4;">
+          <strong style="font-size: 11pt;">{{ company.company_name }}</strong><br />
+          3302 Prism Tower, Business Bay, Dubai, UAE<br />
+          {% if company.tax_id %}<strong>TRN:</strong> {{ company.tax_id }}<br />{% endif %}
+          purchasing@akd-consulting.ae
+        </div>
+      </td>
+      <td style="vertical-align: top; width: 40%; text-align: right;">
+        <div style="font-size: 18pt; font-weight: bold; letter-spacing: 1px;">REQUEST FOR QUOTATION</div>
+        <table style="width: 100%; font-size: 9pt; margin-top: 12px;">
+          <tr><td style="text-align: right;"><strong>RFQ No:</strong></td><td style="text-align: right;">{{ doc.name }}</td></tr>
+          <tr><td style="text-align: right;"><strong>Issue Date:</strong></td><td style="text-align: right;">{{ frappe.utils.formatdate(doc.transaction_date, "dd-MMM-yyyy") }}</td></tr>
+          {% if doc.schedule_date %}<tr><td style="text-align: right;"><strong>Response Due:</strong></td><td style="text-align: right;">{{ frappe.utils.formatdate(doc.schedule_date, "dd-MMM-yyyy") }}</td></tr>{% endif %}
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <!-- INTRO -->
+  <div style="border: 1px solid #ddd; padding: 10px; margin-bottom: 12px; font-size: 9pt;">
+    <p style="margin: 0;">
+      Dear Supplier, kindly submit your best quotation for the items listed below.
+      Per AKD procurement policy (FR-BUY-26), this RFQ is being issued to a minimum of 3 suppliers.
+      Please respond with prices, validity, lead time, payment terms and supplier part numbers.
+    </p>
+  </div>
+
+  <!-- ITEMS -->
+  <table style="width: 100%; border-collapse: collapse; font-size: 9pt; margin-bottom: 16px;">
+    <thead>
+      <tr style="background: #333; color: #fff;">
+        <th style="padding: 6px 8px; text-align: left; width: 5%;">#</th>
+        <th style="padding: 6px 8px; text-align: left; width: 15%;">Item Code</th>
+        <th style="padding: 6px 8px; text-align: left; width: 35%;">Description</th>
+        <th style="padding: 6px 8px; text-align: right; width: 10%;">Qty</th>
+        <th style="padding: 6px 8px; text-align: right; width: 7%;">UoM</th>
+        <th style="padding: 6px 8px; text-align: left; width: 14%;">Your Rate</th>
+        <th style="padding: 6px 8px; text-align: left; width: 14%;">Lead Time</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in doc.items %}
+        <tr style="border-bottom: 1px solid #eee;">
+          <td style="padding: 6px 8px; vertical-align: top;">{{ row.idx }}</td>
+          <td style="padding: 6px 8px; vertical-align: top;">{{ row.item_code }}</td>
+          <td style="padding: 6px 8px; vertical-align: top;">
+            <strong>{{ row.item_name }}</strong>
+            {% if row.description and row.description != row.item_name %}<br /><span style="color: #555; font-size: 8.5pt;">{{ row.description|striptags }}</span>{% endif %}
+          </td>
+          <td style="padding: 6px 8px; text-align: right; vertical-align: top;">{{ row.qty }}</td>
+          <td style="padding: 6px 8px; text-align: right; vertical-align: top;">{{ row.uom }}</td>
+          <td style="padding: 6px 8px; vertical-align: top; height: 28px;">&nbsp;</td>
+          <td style="padding: 6px 8px; vertical-align: top;">&nbsp;</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- SUPPLIER RESPONSE FORM -->
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 9pt;">
+    <tr>
+      <td style="background: #f4f4f4; padding: 6px 10px; font-weight: bold;">SUPPLIER RESPONSE</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #ddd;">
+        <table style="width: 100%; font-size: 9pt;">
+          <tr>
+            <td style="padding: 4px 0;"><strong>Supplier Name:</strong></td><td>____________________________</td>
+            <td style="padding: 4px 0;"><strong>Currency:</strong></td><td>__________</td>
+          </tr>
+          <tr>
+            <td style="padding: 4px 0;"><strong>Quotation Valid Until:</strong></td><td>____________________________</td>
+            <td style="padding: 4px 0;"><strong>Payment Terms:</strong></td><td>____________________________</td>
+          </tr>
+          <tr>
+            <td style="padding: 4px 0;"><strong>Incoterm:</strong></td><td>____________________________</td>
+            <td style="padding: 4px 0;"><strong>Warranty:</strong></td><td>____________________________</td>
+          </tr>
+          <tr>
+            <td colspan="4" style="padding: 8px 0 4px;"><strong>Authorised Signature &amp; Stamp:</strong></td>
+          </tr>
+          <tr>
+            <td colspan="4" style="height: 50px; border-bottom: 1px solid #999;">&nbsp;</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  {% if doc.terms %}
+    <div style="font-size: 9pt; margin-bottom: 12px;">
+      <strong>Terms &amp; Conditions</strong><br />
+      <div style="margin-top: 4px; color: #444;">{{ doc.terms }}</div>
+    </div>
+  {% endif %}
+
+  <!-- FOOTER -->
+  <div style="margin-top: 24px; padding-top: 8px; border-top: 1px solid #ccc; font-size: 8pt; color: #666; text-align: center;">
+    AKD Consulting LLC &nbsp;|&nbsp; TRN {{ company.tax_id or '104661110700003' }} &nbsp;|&nbsp; 3302 Prism Tower, Business Bay, Dubai, UAE<br />
+    Please email your response to purchasing@akd-consulting.ae quoting RFQ No {{ doc.name }}.
+  </div>
+
+</div>

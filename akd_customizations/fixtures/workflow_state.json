@@ -1,0 +1,50 @@
+[
+ {
+  "doctype": "Workflow State",
+  "name": "Pending Line Manager",
+  "workflow_state_name": "Pending Line Manager",
+  "style": "Warning"
+ },
+ {
+  "doctype": "Workflow State",
+  "name": "Pending Management",
+  "workflow_state_name": "Pending Management",
+  "style": "Warning"
+ },
+ {
+  "doctype": "Workflow State",
+  "name": "Pending Purchase Review",
+  "workflow_state_name": "Pending Purchase Review",
+  "style": "Warning"
+ },
+ {
+  "doctype": "Workflow State",
+  "name": "Pending End User",
+  "workflow_state_name": "Pending End User",
+  "style": "Warning"
+ },
+ {
+  "doctype": "Workflow State",
+  "name": "Pending Finance",
+  "workflow_state_name": "Pending Finance",
+  "style": "Warning"
+ },
+ {
+  "doctype": "Workflow State",
+  "name": "Pending Approval",
+  "workflow_state_name": "Pending Approval",
+  "style": "Warning"
+ },
+ {
+  "doctype": "Workflow State",
+  "name": "Pending Sales Manager",
+  "workflow_state_name": "Pending Sales Manager",
+  "style": "Warning"
+ },
+ {
+  "doctype": "Workflow State",
+  "name": "Pending Finance Review",
+  "workflow_state_name": "Pending Finance Review",
+  "style": "Warning"
+ }
+]

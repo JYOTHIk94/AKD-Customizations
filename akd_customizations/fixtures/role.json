@@ -1,0 +1,83 @@
+[
+ {
+  "doctype": "Role",
+  "name": "Sales Executive",
+  "role_name": "Sales Executive",
+  "desk_access": 1,
+  "disabled": 0,
+  "is_custom": 1,
+  "two_factor_auth": 0
+ },
+ {
+  "doctype": "Role",
+  "name": "General Manager",
+  "role_name": "General Manager",
+  "desk_access": 1,
+  "disabled": 0,
+  "is_custom": 1,
+  "two_factor_auth": 0
+ },
+ {
+  "doctype": "Role",
+  "name": "Quality Inspector",
+  "role_name": "Quality Inspector",
+  "desk_access": 1,
+  "disabled": 0,
+  "is_custom": 1,
+  "two_factor_auth": 0
+ },
+ {
+  "doctype": "Role",
+  "name": "Quality Auditor",
+  "role_name": "Quality Auditor",
+  "desk_access": 1,
+  "disabled": 0,
+  "is_custom": 1,
+  "two_factor_auth": 0
+ },
+ {
+  "doctype": "Role",
+  "name": "Process Owner",
+  "role_name": "Process Owner",
+  "desk_access": 1,
+  "disabled": 0,
+  "is_custom": 1,
+  "two_factor_auth": 0
+ },
+ {
+  "doctype": "Role",
+  "name": "Marketing User",
+  "role_name": "Marketing User",
+  "desk_access": 1,
+  "disabled": 0,
+  "is_custom": 1,
+  "two_factor_auth": 0
+ },
+ {
+  "doctype": "Role",
+  "name": "CRM Admin",
+  "role_name": "CRM Admin",
+  "desk_access": 1,
+  "disabled": 0,
+  "is_custom": 1,
+  "two_factor_auth": 0
+ },
+ {
+  "doctype": "Role",
+  "name": "Read-only Viewer",
+  "role_name": "Read-only Viewer",
+  "desk_access": 1,
+  "disabled": 0,
+  "is_custom": 1,
+  "two_factor_auth": 0
+ },
+ {
+  "doctype": "Role",
+  "name": "Timesheet User",
+  "role_name": "Timesheet User",
+  "desk_access": 1,
+  "disabled": 0,
+  "is_custom": 1,
+  "two_factor_auth": 0
+ }
+]

@@ -1,0 +1,16 @@
+[
+ {
+  "doctype": "Supplier Group",
+  "name": "AKD OEM",
+  "supplier_group_name": "AKD OEM",
+  "parent_supplier_group": "All Supplier Groups",
+  "is_group": 0
+ },
+ {
+  "doctype": "Supplier Group",
+  "name": "AKD Non-OEM",
+  "supplier_group_name": "AKD Non-OEM",
+  "parent_supplier_group": "All Supplier Groups",
+  "is_group": 0
+ }
+]

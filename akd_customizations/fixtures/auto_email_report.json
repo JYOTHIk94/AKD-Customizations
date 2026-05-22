@@ -1,0 +1,92 @@
+[
+ {
+  "doctype": "Auto Email Report",
+  "name": "AKD Monthly Profit and Loss",
+  "report": "Profit and Loss Statement",
+  "report_type": "Report Builder",
+  "user": "Administrator",
+  "email_to": "finance@akd-consulting.ae",
+  "format": "PDF",
+  "frequency": "Monthly",
+  "day_of_week": "Monday",
+  "enabled": 1,
+  "description": "Monthly P&L statement — sent first business day of each month."
+ },
+ {
+  "doctype": "Auto Email Report",
+  "name": "AKD Monthly Balance Sheet",
+  "report": "Balance Sheet",
+  "report_type": "Report Builder",
+  "user": "Administrator",
+  "email_to": "finance@akd-consulting.ae",
+  "format": "PDF",
+  "frequency": "Monthly",
+  "day_of_week": "Monday",
+  "enabled": 1,
+  "description": "Monthly Balance Sheet — sent first business day of each month."
+ },
+ {
+  "doctype": "Auto Email Report",
+  "name": "AKD Weekly AR Aging",
+  "report": "Accounts Receivable",
+  "report_type": "Script Report",
+  "user": "Administrator",
+  "email_to": "finance@akd-consulting.ae,sales@akd-consulting.ae",
+  "format": "XLSX",
+  "frequency": "Weekly",
+  "day_of_week": "Monday",
+  "enabled": 1,
+  "description": "Weekly AR aging — Monday morning to Finance and Sales."
+ },
+ {
+  "doctype": "Auto Email Report",
+  "name": "AKD Weekly AP Aging",
+  "report": "Accounts Payable",
+  "report_type": "Script Report",
+  "user": "Administrator",
+  "email_to": "finance@akd-consulting.ae,procurement@akd-consulting.ae",
+  "format": "XLSX",
+  "frequency": "Weekly",
+  "day_of_week": "Monday",
+  "enabled": 1,
+  "description": "Weekly AP aging — Monday morning to Finance and Procurement."
+ },
+ {
+  "doctype": "Auto Email Report",
+  "name": "AKD Quarterly VAT Summary",
+  "report": "VAT Audit Report",
+  "report_type": "Script Report",
+  "user": "Administrator",
+  "email_to": "finance@akd-consulting.ae",
+  "format": "XLSX",
+  "frequency": "Quarterly",
+  "enabled": 1,
+  "description": "Quarterly UAE VAT summary — input vs output (FR-ACC-25)."
+ },
+ {
+  "doctype": "Auto Email Report",
+  "name": "AKD CRM Weekly Pipeline Forecast",
+  "report": "AKD CRM Forecast / Revenue Projection",
+  "report_type": "Query Report",
+  "user": "Administrator",
+  "email_to": "crm@akd-consulting.ae",
+  "format": "HTML",
+  "frequency": "Weekly",
+  "day_of_week": "Monday",
+  "enabled": 1,
+  "description": "FR-CRM-61 — weekly weighted pipeline forecast to CRM."
+ },
+ {
+  "doctype": "Auto Email Report",
+  "name": "AKD CRM Weekly Lead Source Analysis",
+  "report": "AKD CRM Lead Source Analysis",
+  "report_type": "Query Report",
+  "user": "Administrator",
+  "email_to": "crm@akd-consulting.ae",
+  "format": "HTML",
+  "frequency": "Weekly",
+  "day_of_week": "Monday",
+  "enabled": 1,
+  "description": "FR-CRM-61 — weekly lead-source conversion analysis."
+ }
+]

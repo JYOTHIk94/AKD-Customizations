@@ -1,0 +1,29 @@
+[
+ {
+  "doctype": "Print Format",
+  "name": "AKD Sales Invoice",
+  "doc_type": "Sales Invoice",
+  "module": "Accounting",
+  "standard": "No",
+  "disabled": 0,
+  "custom_format": 1,
+  "print_format_type": "Jinja",
+  "pdf_generator": "wkhtmltopdf",
+  "margin_top": 15.0,
+  "margin_bottom": 15.0,
+  "margin_left": 15.0,
+  "margin_right": 15.0,
+  "font_size": 10,
+  "font": "Inter",
+  "page_number": "Bottom Right",
+  "align_labels_right": 0,
+  "show_section_headings": 0,
+  "line_breaks": 0,
+  "absolute_value": 0,
+  "raw_printing": 0,
+  "print_format_builder": 0,
+  "print_format_builder_beta": 0,
+  "css": ".akd-header { border-bottom: 2px solid #2C3E50; padding-bottom: 8px; margin-bottom: 12px; }\n.akd-header td { vertical-align: top; }\n.akd-company { font-size: 16px; font-weight: 600; color: #2C3E50; }\n.akd-trn { font-size: 10px; color: #555; }\n.akd-meta th { text-align: left; background: #F4F4F4; padding: 4px 6px; }\n.akd-meta td { padding: 4px 6px; }\n.akd-items { width: 100%; border-collapse: collapse; margin-top: 12px; }\n.akd-items th, .akd-items td { border: 1px solid #DDD; padding: 4px 6px; font-size: 10px; }\n.akd-items th { background: #2C3E50; color: white; }\n.akd-totals { margin-top: 8px; float: right; min-width: 280px; }\n.akd-totals td { padding: 3px 6px; }\n.akd-totals .total-row { font-weight: 600; border-top: 2px solid #2C3E50; }\n.akd-terms { margin-top: 20px; font-size: 9px; color: #444; }\n.akd-bank { margin-top: 12px; font-size: 9px; padding: 6px; background: #F9F9F9; border: 1px dashed #CCC; }\n.akd-footer { margin-top: 24px; padding-top: 8px; border-top: 1px solid #DDD; font-size: 8px; text-align: center; color: #888; }",
+  "html": "<div class=\"akd-print\">\n  <table class=\"akd-header\" width=\"100%\">\n    <tr>\n      <td width=\"60%\">\n        {%- if doc.company_logo or frappe.db.get_value('Company', doc.company, 'company_logo') -%}\n          <img src=\"{{ doc.company_logo or frappe.db.get_value('Company', doc.company, 'company_logo') }}\" style=\"max-height: 60px;\" />\n        {%- endif -%}\n        <div class=\"akd-company\">{{ doc.company }}</div>\n        <div class=\"akd-trn\">TRN: {{ frappe.db.get_value('Company', doc.company, 'tax_id') or '' }}</div>\n        <div class=\"akd-trn\">{{ frappe.db.get_value('Company', doc.company, 'registration_details') or '' }}</div>\n      </td>\n      <td width=\"40%\" style=\"text-align: right;\">\n        <h2 style=\"margin: 0; color: #2C3E50;\">TAX INVOICE</h2>\n        <div>{{ doc.name }}</div>\n        <div>{{ frappe.format(doc.posting_date, {'fieldtype': 'Date'}) }}</div>\n      </td>\n    </tr>\n  </table>\n\n  <table class=\"akd-meta\" width=\"100%\">\n    <tr>\n      <th width=\"50%\">Bill To</th>\n      <th width=\"50%\">Invoice Details</th>\n    </tr>\n    <tr>\n      <td>\n        <strong>{{ doc.customer_name }}</strong><br/>\n        {{ (doc.address_display or '') | safe }}\n        {%- if doc.tax_id %}<br/>TRN: {{ doc.tax_id }}{%- endif -%}\n      </td>\n      <td>\n        <strong>PO Reference:</strong> {{ doc.po_no or '—' }}<br/>\n        <strong>Payment Terms:</strong> {{ doc.payment_terms_template or '—' }}<br/>\n        <strong>Due Date:</strong> {{ frappe.format(doc.due_date, {'fieldtype': 'Date'}) if doc.due_date else '—' }}<br/>\n        <strong>Currency:</strong> {{ doc.currency }}\n      </td>\n    </tr>\n  </table>\n\n  <table class=\"akd-items\">\n    <thead>\n      <tr>\n        <th width=\"4%\">#</th>\n        <th width=\"36%\">Description</th>\n        <th width=\"10%\" style=\"text-align: right;\">Qty</th>\n        <th width=\"10%\">UOM</th>\n        <th width=\"15%\" style=\"text-align: right;\">Rate</th>\n        <th width=\"10%\" style=\"text-align: right;\">Disc %</th>\n        <th width=\"15%\" style=\"text-align: right;\">Amount</th>\n      </tr>\n    </thead>\n    <tbody>\n      {%- for it in doc.items -%}\n      <tr>\n        <td>{{ loop.index }}</td>\n        <td><strong>{{ it.item_code }}</strong><br/><span style=\"color:#555\">{{ it.description or it.item_name }}</span></td>\n        <td style=\"text-align: right;\">{{ it.qty }}</td>\n        <td>{{ it.uom }}</td>\n        <td style=\"text-align: right;\">{{ frappe.utils.fmt_money(it.rate, currency=doc.currency) }}</td>\n        <td style=\"text-align: right;\">{{ it.discount_percentage or 0 }}</td>\n        <td style=\"text-align: right;\">{{ frappe.utils.fmt_money(it.amount, currency=doc.currency) }}</td>\n      </tr>\n      {%- endfor -%}\n    </tbody>\n  </table>\n\n  <table class=\"akd-totals\">\n    <tr>\n      <td>Net Total</td>\n      <td style=\"text-align: right;\">{{ frappe.utils.fmt_money(doc.net_total, currency=doc.currency) }}</td>\n    </tr>\n    {%- for tax in doc.taxes -%}\n    <tr>\n      <td>{{ tax.description }}{% if tax.rate %} @ {{ tax.rate }}%{% endif %}</td>\n      <td style=\"text-align: right;\">{{ frappe.utils.fmt_money(tax.tax_amount, currency=doc.currency) }}</td>\n    </tr>\n    {%- endfor -%}\n    <tr class=\"total-row\">\n      <td>Grand Total</td>\n      <td style=\"text-align: right;\">{{ frappe.utils.fmt_money(doc.grand_total, currency=doc.currency) }}</td>\n    </tr>\n    <tr>\n      <td>In Words</td>\n      <td>{{ doc.in_words or '' }}</td>\n    </tr>\n  </table>\n\n  <div style=\"clear: both;\"></div>\n\n  <div class=\"akd-bank\">\n    <strong>Bank Details:</strong> RAK Bank — Account: {{ doc.company_bank_account or 'RAK Bank - Current AED' }}\n    <br/>IBAN / SWIFT details to be provided by AKD Finance.\n  </div>\n\n  {%- if doc.terms -%}\n  <div class=\"akd-terms\">\n    <strong>Terms &amp; Conditions:</strong><br/>\n    {{ doc.terms | safe }}\n  </div>\n  {%- endif -%}\n\n  <div class=\"akd-footer\">\n    AKD Consulting LLC — 3302 Prism Tower, Business Bay, Dubai, UAE — finance@akd-consulting.ae\n    <br/>This is a system-generated tax invoice. No signature required unless requested.\n  </div>\n</div>"
+ }
+]
