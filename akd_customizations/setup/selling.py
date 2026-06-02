@@ -72,9 +72,13 @@ def _find_vat_output_account() -> str | None:
 
 def _apply_selling_settings() -> dict:
 	patch = {
-		# FR-SELL-25 + 26 — C-02 resolved Yes
-		"so_required": "Yes",
-		"dn_required": "Yes",
+		# FR-SELL-25 + 26 — C-02 resolved Yes, but enforcement now lives in
+		# AKD hooks: overrides.delivery_note.validate_so_required and
+		# overrides.sales_invoice.validate_so_dn_required. Setting these to
+		# "No" so ERPNext core's so_dn_required() / DN.so_required() early-exit
+		# and our doc_event is the single source of truth.
+		"so_required": "No",
+		"dn_required": "No",
 		# FR-SELL-43 — stop rate change quotation → SI (selling is strict)
 		"maintain_same_sales_rate": 1,
 		"maintain_same_rate_action": "Stop",

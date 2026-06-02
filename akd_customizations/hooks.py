@@ -143,24 +143,114 @@ permission_query_conditions = {
 # ---------------
 
 doc_events = {
+	# ── Selling ──────────────────────────────────────────────────────────────
+	# FR-SELL-09 / FR-SELL-26 / FR-SELL-68/70 / FR-FA-55
 	"Sales Invoice": {
 		"validate": [
 			"akd_customizations.overrides.sales_invoice.validate_credit_limit",
-			# FR-FA-55 — block selling an asset without disposal approval.
+			"akd_customizations.overrides.sales_invoice.validate_so_dn_required",
+			"akd_customizations.overrides.sales_invoice.validate_return_reason",
 			"akd_customizations.overrides.asset_disposal.require_for_sales_invoice",
 		],
+	},
+	# FR-SELL-28 / FR-SELL-32/36 / FR-SELL-58 / FR-SELL-65
+	"Sales Order": {
+		"validate": [
+			"akd_customizations.overrides.sales_order.validate_customer_po",
+			"akd_customizations.overrides.sales_order.validate_hold_state",
+			"akd_customizations.overrides.sales_order.validate_installation_flag",
+			"akd_customizations.overrides.sales_order.validate_commission_split",
+		],
+	},
+	# FR-SELL-25 / FR-SELL-65 / FR-SELL-68/72
+	"Delivery Note": {
+		"validate": [
+			"akd_customizations.overrides.delivery_note.validate_so_required",
+			"akd_customizations.overrides.delivery_note.validate_return_reason",
+			"akd_customizations.overrides.delivery_note.validate_installation_status",
+		],
+	},
+	# FR-SELL-21 / FR-SELL-23
+	"Quotation": {
+		"validate": "akd_customizations.overrides.quotation.validate_lost_reason",
+		"before_submit": "akd_customizations.overrides.quotation.require_approval_before_submit",
+	},
+	# ── Buying ───────────────────────────────────────────────────────────────
+	# FR-BUY-43 / FR-BUY-50 / FR-BUY-80
+	"Purchase Invoice": {
+		"validate": [
+			"akd_customizations.overrides.purchase_invoice.validate_pr_link",
+			"akd_customizations.overrides.purchase_invoice.validate_rejected_not_billed",
+			"akd_customizations.overrides.purchase_invoice.validate_return_reason",
+		],
+	},
+	# FR-BUY-42
+	"Purchase Order": {
+		"validate": "akd_customizations.overrides.purchase_order.validate_hold_state",
+	},
+	# FR-BUY-46 / FR-BUY-48 / FR-BUY-50 / FR-QA-48
+	"Purchase Receipt": {
+		"validate": [
+			"akd_customizations.overrides.purchase_receipt.validate_no_over_receipt",
+			"akd_customizations.overrides.purchase_receipt.enforce_rejected_warehouse",
+		],
+		"before_submit": "akd_customizations.overrides.purchase_receipt.validate_incoming_inspection",
+	},
+	# ── CRM ──────────────────────────────────────────────────────────────────
+	# FR-CRM-12 / FR-CRM-66
+	"Lead": {
+		"before_insert": "akd_customizations.overrides.lead.validate_duplicate_email",
+		"on_trash": "akd_customizations.overrides.lead.restrict_delete",
 	},
 	# FR-CRM-25 — auto-create Customer when an Opportunity is won.
 	"Opportunity": {
 		"on_change": "akd_customizations.overrides.opportunity.create_customer_on_won",
 	},
+	# ── Quality ──────────────────────────────────────────────────────────────
+	# FR-QA-12
+	"Quality Inspection": {
+		"before_submit": "akd_customizations.overrides.quality.require_nc_on_rejection",
+	},
+	# FR-QA-32
+	"Non Conformance": {
+		"validate": "akd_customizations.overrides.quality.validate_nc_trigger",
+	},
+	# FR-QA-34
+	"Quality Action": {
+		"validate": "akd_customizations.overrides.quality.validate_action_deadline",
+	},
+	# FR-QA-28
+	"Quality Review": {
+		"validate": "akd_customizations.overrides.quality.validate_review_goal",
+	},
+	# ── Projects ─────────────────────────────────────────────────────────────
+	# FR-PROJ-30 / FR-PROJ-33
+	"Timesheet": {
+		"validate": [
+			"akd_customizations.overrides.timesheet.validate_hour_granularity",
+			"akd_customizations.overrides.timesheet.validate_no_overlap",
+		],
+	},
+	# ── Fixed Assets ─────────────────────────────────────────────────────────
+	# FR-FA-06/07 / FR-FA-26 / FR-FA-55
+	"Asset": {
+		"validate": [
+			"akd_customizations.overrides.asset.validate_unique_asset_tag",
+			"akd_customizations.overrides.asset.validate_salvage_value",
+			"akd_customizations.overrides.asset_disposal.stamp_approver",
+		],
+	},
+	# FR-FA-47/48/49 — out of scope.
+	"Asset Movement": {
+		"validate": "akd_customizations.overrides.asset_movement.block_movement",
+	},
+	# FR-FA-43/44
+	"Asset Repair": {
+		"validate": "akd_customizations.overrides.asset_repair.block_capitalisation",
+	},
 	# FR-FA-55 — block scrapping an asset without disposal approval.
 	"Journal Entry": {
 		"validate": "akd_customizations.overrides.asset_disposal.require_for_journal_entry",
-	},
-	# FR-FA-55 — stamp who approved the disposal (audit).
-	"Asset": {
-		"validate": "akd_customizations.overrides.asset_disposal.stamp_approver",
 	},
 }
 
